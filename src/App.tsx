@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import { ThemeProvider } from 'styled-components'
+
+import { SocketProvider } from './contexts/socket'
+import { AuthProvider } from './contexts/auth'
+import Footer from './components/Footer'
+
+import GlobalStyle from './styles/global'
+import Routes from './routes'
+
+import dark from './styles/themes/dark'
 
 function App() {
+  const [theme, ] = useState(dark)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <SocketProvider>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
+      </SocketProvider>
+      <Footer />
+    </ThemeProvider>
   );
 }
 
-export default App;
+export default App
