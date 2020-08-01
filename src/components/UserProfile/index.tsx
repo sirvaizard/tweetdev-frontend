@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 import api from '../../services/api'
 
@@ -23,6 +23,19 @@ interface User {
 
 const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
   const [user, setUser] = useState<User>({} as User)
+  const [isFollowing, setIsFollowing] = useState<boolean>(false)
+
+  const handleFollowUser = useCallback(async () => {
+    await api.post(`/users/${user.id}/follow`)
+
+    setIsFollowing(true)
+  }, [user.id])
+
+  const handleUnfollowUser = useCallback(async () => {
+    await api.delete(`/users/${user.id}/unfollow`)
+
+    setIsFollowing(false)
+  }, [user.id])
 
   useEffect(() => {
     async function fetchUser() {
@@ -31,9 +44,17 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
       setUser(data)
     }
 
-    fetchUser()
+    async function fetchIsFollowing() {
+      const { data } = await api.get(`/users/${user.id}/following`)
 
-  }, [username])
+      setIsFollowing(data.following)
+    }
+
+    fetchUser()
+    fetchIsFollowing()
+    console.log('useEffect userprofile')
+
+  }, [user.id, username])
 
   if(!user.avatar) {
     return (
@@ -56,7 +77,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 
           <p>{user.bio}</p>
         </Info>
-        <Button>Seguir</Button>
+        { isFollowing ?
+          <Button onClick={handleUnfollowUser}>Unfollow</Button> :
+          <Button onClick={handleFollowUser}>Follow</Button>
+        }
       </Header>
 
       <FeedProfile userId={user.id}/>
