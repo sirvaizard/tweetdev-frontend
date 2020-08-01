@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 
 import api from '../../services/api'
+import AuthContext from '../../contexts/auth'
 
 import { Container, Header, Cover, Info } from './styles'
 import Button from '../Button'
@@ -24,6 +25,7 @@ interface User {
 const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
   const [user, setUser] = useState<User>({} as User)
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
+  const { user: loggedUser } = useContext(AuthContext)
 
   const handleFollowUser = useCallback(async () => {
     await api.post(`/users/${user.id}/follow`)
@@ -52,7 +54,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 
     fetchUser()
     fetchIsFollowing()
-    console.log('useEffect userprofile')
 
   }, [user.id, username])
 
@@ -77,9 +78,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 
           <p>{user.bio}</p>
         </Info>
-        { isFollowing ?
+        { (loggedUser.id !== user.id ) && (isFollowing ?
           <Button onClick={handleUnfollowUser}>Unfollow</Button> :
-          <Button onClick={handleFollowUser}>Follow</Button>
+          <Button onClick={handleFollowUser}>Follow</Button>)
         }
       </Header>
 

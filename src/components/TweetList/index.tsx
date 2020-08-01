@@ -1,5 +1,6 @@
 import React from 'react'
 import { FiHeart, FiRepeat, FiMessageSquare } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
 
 import { 
   Post, Info, Avatar, UserInfo, Name, Username, Time, Content,
@@ -17,10 +18,10 @@ export default function TweetList({ tweets }: {tweets: Tweet[]}) {
         <Info>
           <Avatar src={tweet.author.avatar.url} />
           <UserInfo>
-            <p>
+            <Link to={`/profile/${tweet.author.username}`}>
               <Name>{ tweet.author.name }</Name>
               <Username>@{ tweet.author.username }</Username>
-            </p>
+            </Link>
             <Time>{ tweet.time }</Time>
           </UserInfo>
           <Language>

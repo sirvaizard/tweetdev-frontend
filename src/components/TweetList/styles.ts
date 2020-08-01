@@ -28,6 +28,14 @@ export const UserInfo = styled.div`
   flex: 1;
   justify-self: flex-start;
   margin: 10px 0 0 10px;
+
+  & > a {
+    color: #333;
+
+    &:visited {
+      color: #333;
+    }
+  }
 `;
 
 export const Name = styled.strong`
